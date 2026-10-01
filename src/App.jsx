@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { HERO_SKILLS, PROJECTS, SKILLS, STATUS_COLORS } from "./data.js";
+import { HERO_SKILLS, SKILLS, STATUS_COLORS } from "./data.js";
+import { useProjects } from "./projects.js";
+import { BiplaneSprite, GardenTree, GardenLife, CaveScenery, MineEntrance } from "./Scenery.jsx";
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -48,16 +50,16 @@ function useHashRouter() {
   return { path };
 }
 
-function usePageTitle(path) {
+function usePageTitle(path, projects) {
   useEffect(() => {
     const route = parseRoute(path);
-    const project = route.page === "project" ? PROJECTS.find((item) => item.slug === route.slug) : null;
+    const project = route.page === "project" ? projects.find((item) => item.slug === route.slug) : null;
     const title = route.page === "skills" ? "Skills" : project?.title || "Playful software";
     document.title = `${title} · N.F. Studio`;
-  }, [path]);
+  }, [path, projects]);
 }
 
-function PixelWallpaper({ pixelSize = 6 }) {
+function PixelWallpaper({ pixelSize = 4 }) {
   const canvasRef = useRef(null);
   useEffect(() => {
     const draw = () => {
@@ -90,27 +92,77 @@ function PixelWallpaper({ pixelSize = 6 }) {
           context.fillRect(x, y, 1, height - y);
         }
       };
-      hill(0.18, Math.floor(height * 0.79), Math.floor(height * 0.16), "#4b8db7");
-      hill(0.61, Math.floor(height * 0.82), Math.floor(height * 0.18), "#376d83");
-      hill(0.05, Math.floor(height * 0.9), Math.floor(height * 0.095), "#38874c");
-      hill(0.52, Math.floor(height * 0.93), Math.floor(height * 0.075), "#50a54e");
+      // The landscape occupies a fixed band above the grass, even on tall phones.
+      const landscape = Math.min(310, Math.max(220, cssWidth * .24)) / pixelSize;
+      hill(.18, height - landscape * .9, landscape * .64, "#4b8db7");
+      hill(.61, height - landscape * .73, landscape * .6, "#376d83");
+      hill(.05, height - landscape * .48, landscape * .33, "#38874c");
+      hill(.52, height - landscape * .25, landscape * .32, "#50a54e");
 
-      // Let the stream wind across the valley and widen as it reaches the foreground.
-      const riverStart = Math.floor(height * 0.63);
-      for (let y = riverStart; y < height * 0.99; y++) {
-        const flow = (y - riverStart) / (height - riverStart);
-        const center = Math.floor(width * (0.52 + Math.sin(flow * Math.PI * 2.1) * 0.075 - flow * 0.045));
-        const span = Math.max(2, Math.round(2 + flow * 8));
-        const bank = span + 4 + Math.round(flow * 3);
-        context.fillStyle = "#287b9e";
-        context.fillRect(center - Math.floor(bank / 2), y, bank, 1);
-        context.fillStyle = y % 4 === 0 ? "#70dcf4" : "#35a9d7";
+      // A path leads from the cottage to the bridge; the stream stays in the valley.
+      for (let y = height - landscape * .43; y < height - 7; y++) {
+        const flow = (y - height + landscape * .43) / (landscape * .43);
+        const center = width * (.16 + flow * .33);
+        context.fillStyle = y % 3 ? "#c8b273" : "#e0ce92";
+        context.fillRect(Math.floor(center), Math.floor(y), 5 + flow * 5, 1);
+      }
+      const riverStart = Math.floor(height - landscape * 1.04);
+      for (let y = riverStart; y < height - 5; y++) {
+        const flow = (y - riverStart) / (height - 5 - riverStart);
+        const center = Math.floor(width * (.55 + Math.sin(flow * Math.PI * 1.8) * .035 - flow * .035));
+        const span = Math.max(3, Math.round((12 + flow * flow * Math.min(110, cssWidth * .17)) / pixelSize));
+        context.fillStyle = "#49685f";
+        context.fillRect(center - Math.floor(span / 2) - 2, y, span + 4, 1);
+        context.fillStyle = y % 4 === 0 ? "#6ad2e9" : "#309dc9";
         context.fillRect(center - Math.floor(span / 2), y, span, 1);
         if (y % 5 < 2) {
           context.fillStyle = "#b3f4f5";
           context.fillRect(center - Math.floor(span / 2) + 1, y, Math.max(1, Math.floor(span / 3)), 1);
         }
+        if (y % 8 === 0) {
+          context.fillStyle = "#82917b";
+          context.fillRect(center + Math.floor(span / 2) + 1, y, 3, 2);
+        }
       }
+      // Deterministic grass, wildflowers and pebbles add detail without flicker.
+      let landscapeSeed = 17421;
+      const random = () => {
+        landscapeSeed = (Math.imul(landscapeSeed, 1664525) + 1013904223) >>> 0;
+        return landscapeSeed / 4294967296;
+      };
+      for (let i = 0; i < width * 3; i++) {
+        const x = Math.floor(random() * width);
+        const y = height - 7 - Math.floor(random() * landscape * .3);
+        if (x > width * .44 && x < width * .61) continue;
+        context.fillStyle = i % 3 ? "#6aaf4c" : "#367946";
+        context.fillRect(x, y, 1, i % 2 + 1);
+        if (i % 11 === 0) {
+          context.fillStyle = ["#f4de7c", "#fff3c7", "#e88c6e"][i % 3];
+          context.fillRect(x - 1, y - 2, 3, 1);
+          context.fillRect(x, y - 3, 1, 3);
+          context.fillStyle = "#c39446";
+          context.fillRect(x, y - 2, 1, 1);
+        }
+        if (i % 23 === 0) {
+          context.fillStyle = "#657568";
+          context.fillRect(x, y, 3, 2);
+          context.fillStyle = "#a3a48a";
+          context.fillRect(x, y, 2, 1);
+        }
+      }
+      const bridgeX = Math.floor(width * .516);
+      const bridgeY = height - Math.floor(90 / pixelSize);
+      const bridgeWidth = Math.floor(100 / pixelSize);
+      context.fillStyle = "#573f2b";
+      context.fillRect(bridgeX - bridgeWidth / 2, bridgeY, bridgeWidth, 4);
+      context.fillStyle = "#b17c42";
+      context.fillRect(bridgeX - bridgeWidth / 2, bridgeY - 2, bridgeWidth, 3);
+      for (let i = 0; i < bridgeWidth; i += 5) {
+        context.fillStyle = "#e0b369";
+        context.fillRect(bridgeX - bridgeWidth / 2 + i, bridgeY - 5, 1, 5);
+      }
+      context.fillStyle = "#85552e";
+      context.fillRect(bridgeX - bridgeWidth / 2, bridgeY - 5, bridgeWidth, 1);
     };
     draw();
     const observer = new ResizeObserver(draw);
@@ -279,31 +331,7 @@ function PixelBalloons() {
 }
 
 function PixelPlaneSprite() {
-  return (
-    <svg viewBox="0 0 96 48" width="100%" height="100%" shapeRendering="crispEdges" aria-hidden="true">
-      <path d="M8 22h15l7-6h34l9 4h10l8 4-8 4H73l-9 4H30l-7-5H8z" fill="#6e2b24" transform="translate(0 2)" />
-      <path d="M6 19h16l6-4h37l9 4h10l8 4-8 4H74l-9 4H28l-6-5H6z" fill="#a3362a" stroke="#49281f" strokeWidth="2" />
-      <path d="M21 18h50l7 3H28z" fill="#e45a3c" />
-      <path d="M23 5h43l8 4v5H20V9z" fill="#b73a2d" stroke="#49281f" strokeWidth="2" />
-      <path d="M27 7h34l5 2v2H24V9z" fill="#ee7548" />
-      <path d="M30 32h36l7 4v4H26v-4z" fill="#a9362a" stroke="#49281f" strokeWidth="2" />
-      <path d="M34 34h27l5 2H31z" fill="#e45a3c" />
-      <path d="M10 15h12v5H6v-3z" fill="#bd4130" stroke="#49281f" strokeWidth="2" />
-      <path d="M31 14h3v5h-3zm29 0h3v5h-3zM37 29h3v6h-3zm22 0h3v6h-3z" fill="#5a3326" />
-      <path d="M40 18h9v6h-9z" fill="#9be0e8" stroke="#49281f" strokeWidth="2" />
-      <path d="M42 19h4v2h-4z" fill="#e4ffff" />
-      <path d="M51 21h12v2H51z" fill="#ffd66f" />
-      <path d="M31 25h4v3h-4zm9 0h4v3h-4zm9 0h4v3h-4z" fill="#f2c05f" />
-      <rect x="85" y="20" width="5" height="7" fill="#5a3326" />
-      <g className="plane-propeller">
-        <path d="M89 22h7v3h-7zM91 17h3v13h-3z" fill="#382d2b" />
-        <path d="M90 23h2v1h-2z" fill="#d8c39a" />
-      </g>
-      <path d="M38 36h4v4h-4zm22 0h4v4h-4z" fill="#30241f" />
-      <rect x="39" y="39" width="3" height="2" fill="#251d1a" />
-      <rect x="61" y="39" width="3" height="2" fill="#251d1a" />
-    </svg>
-  );
+  return <BiplaneSprite />;
 }
 
 function PixelPlane() {
@@ -316,15 +344,16 @@ function PixelPlane() {
       const plane = planeRef.current;
       if (stage && plane) {
         const bounds = stage.getBoundingClientRect();
-        const radiusX = Math.min(bounds.width * 0.36, 500);
-
-        const centerX = bounds.width * 0.56;
-        const centerY = Math.min(bounds.height * 0.14, 116);
-        const angle = (time / 1000) * 0.34;
-        const x = centerX + radiusX * Math.sin(angle);
-        const y = centerY + Math.sin(angle * 0.5) * 6;
-        const direction = Math.cos(angle) < 0 ? -1 : 1;
-        plane.style.transform = "translate(" + (x - plane.offsetWidth / 2) + "px, " + (y - plane.offsetHeight / 2) + "px) scaleX(" + direction + ")";
+        const size = Math.min(bounds.width, bounds.height);
+        const radiusX = size * .25;
+        const radiusY = size * .12;
+        const centerX = bounds.width * .5;
+        const centerY = bounds.height * .22;
+        const angle = (time / 1000) * .6;
+        const x = centerX + radiusX * Math.cos(angle);
+        const y = centerY + radiusY * Math.sin(angle);
+        const heading = Math.atan2(radiusY * Math.cos(angle), -radiusX * Math.sin(angle)) * 180 / Math.PI;
+        plane.style.transform = "translate(" + (x - plane.offsetWidth / 2) + "px, " + (y - plane.offsetHeight / 2) + "px) rotate(" + heading + "deg)";
       }
       animationFrame = requestAnimationFrame(fly);
     };
@@ -358,33 +387,12 @@ function PixelSun() {
   );
 }
 
-function PixelTreeSprite({ scale = 1 }) {
-  const size = 8 * scale;
-  const rows = ["   xxx   ", "  xxxxx  ", " xxxxxxx ", "xxxxxxxxx", " xxxxxxx ", "  xxxxx  "];
-  return (
-    <div className="pixel-tree" aria-hidden="true">
-      {rows.map((row, rowIndex) => (
-        <div className="tree-row" key={rowIndex}>
-          {row.split("").map((cell, cellIndex) => (
-            <span
-              className={cell === "x" ? "tree-leaf" : "tree-empty"}
-              key={cellIndex}
-              style={{ width: size, height: size }}
-            />
-          ))}
-        </div>
-      ))}
-      <div className="tree-trunk" style={{ width: size * 2, height: size * 3, marginLeft: size * 3.5 }} />
-    </div>
-  );
-}
-
 function PixelTrees() {
   return (
     <div className="scene-trees" aria-hidden="true">
-      <div className="scene-tree scene-tree--one"><PixelTreeSprite scale={1.8} /></div>
-      <div className="scene-tree scene-tree--two"><PixelTreeSprite scale={1.55} /></div>
-      <div className="scene-tree scene-tree--three"><PixelTreeSprite scale={1.15} /></div>
+      <div className="scene-tree scene-tree--one"><GardenTree /></div>
+      <div className="scene-tree scene-tree--two"><GardenTree variant={1} /></div>
+      <div className="scene-tree scene-tree--three"><GardenTree variant={2} /></div>
     </div>
   );
 }
@@ -441,6 +449,7 @@ function SkyScenery({ className = "" }) {
       <div className="distant-cloud-bank" />
       <PixelSun />
       <PixelTrees />
+      <GardenLife />
       <PixelClouds />
       <PixelBalloons />
       <PixelPlane />
@@ -600,7 +609,7 @@ function ImageOrThumb({ project, className = "" }) {
   const [showImage, setShowImage] = useState(Boolean(project.img));
   useEffect(() => setShowImage(Boolean(project.img)), [project.img]);
   if (showImage) {
-    return <img className={className} src={project.img} alt={project.title} onError={() => setShowImage(false)} />;
+    return <img className={className} src={project.img} style={{ objectFit: project.imageFit }} alt={project.title} onError={() => setShowImage(false)} />;
   }
   return <div className={`generated-thumb ${className}`} aria-label={`Pixel art preview for ${project.title}`}><PixelThumb seed={project.slug} /></div>;
 }
@@ -654,7 +663,7 @@ function FeaturedCard({ project }) {
   );
 }
 
-function FeaturedBoard({ projects }) {
+function FeaturedBoard({ projects, loaded, error }) {
   const featured = projects.filter((project) => project.highlighted).slice(0, 4);
   return (
     <section className="featured-board" aria-labelledby="featured-title">
@@ -670,7 +679,7 @@ function FeaturedBoard({ projects }) {
       ) : (
         <div className="feature-empty">
           <span className="feature-empty__tool" aria-hidden="true"><PickaxeSprite /></span>
-          <p>The next discovery is taking shape.</p>
+          <p>{!loaded ? "Discovering projects…" : error ? "Projects are taking a little longer to load. Please try again shortly." : "The next discovery is taking shape."}</p>
         </div>
       )}
       <div className="feature-slots" aria-label={`${featured.length} of 4 highlighted project slots used`}>
@@ -718,10 +727,12 @@ function Lantern({ className = "" }) {
   );
 }
 
-function Underground({ projects }) {
-  const allProjects = projects.filter((project) => !project.highlighted);
+function Underground({ projects, loaded, error }) {
+  const surfaceSlugs = new Set(projects.filter((project) => project.highlighted).slice(0, 4).map((project) => project.slug));
+  const allProjects = projects.filter((project) => !surfaceSlugs.has(project.slug));
   return (
     <section className="underground" id="projects" aria-labelledby="all-projects-title">
+      <CaveScenery />
       <div className="soil-lip" aria-hidden="true">
         <div className="grass-pixels" />
         <div className="hanging-roots" />
@@ -745,10 +756,12 @@ function Underground({ projects }) {
           <p>Little builds, big ideas, and everything in between.</p>
         </div>
         <div className="projects-grid">
+          {!allProjects.length && <p className="catalog-notice" role="status">{!loaded ? "Discovering projects…" : error ? "Projects are taking a little longer to load. Please try again shortly." : "More discoveries are on their way."}</p>}
           {allProjects.map((project, index) => <ProjectCard key={project.slug} project={project} number={index + 1} />)}
         </div>
       </div>
       <div className="cave-bottom-art" aria-hidden="true">
+        <MineEntrance />
         <CrystalSprite variant="violet" className="crystal--purple" />
         <CrystalSprite variant="blue" className="crystal--blue" />
         <TreasureChestSprite />
@@ -768,8 +781,9 @@ function SubpageFrame({ children, className = "" }) {
   );
 }
 
-function ProjectPage({ slug }) {
-  const project = PROJECTS.find((item) => item.slug === slug);
+function ProjectPage({ slug, projects, loaded, error }) {
+  if (!loaded || (error && !projects.length)) return <SubpageFrame><p className="catalog-notice" role="status">{!loaded ? "Discovering projects…" : "Projects are taking a little longer to load. Please try again shortly."}</p></SubpageFrame>;
+  const project = projects.find((item) => item.slug === slug);
   if (!project) return <NotFound />;
   return (
     <SubpageFrame className="project-detail-page">
@@ -780,9 +794,9 @@ function ProjectPage({ slug }) {
         <p className="detail-summary">{project.summary}</p>
         <p className="detail-body">{project.body}</p>
         <ProjectMeta project={project} />
-        {project.slug === "countdown-live-wallpaper" && (
-          <a className="button button--parchment detail-action" href="https://play.google.com/store/apps/details?id=com.Buddy.countdown" target="_blank" rel="noreferrer">
-            Find it on Google Play <ArrowIcon />
+        {project.url && (
+          <a className="button button--parchment detail-action" href={project.url} target="_blank" rel="nofollow noopener noreferrer">
+            {project.linkLabel} <ArrowIcon />
           </a>
         )}
       </article>
@@ -829,7 +843,7 @@ function NotFound() {
   );
 }
 
-function Home() {
+function Home({ projects, loaded, error }) {
   return (
     <div className="portfolio-home">
       <section className="surface-scene" aria-label="Pixel art garden and featured work">
@@ -839,21 +853,22 @@ function Home() {
         <div className="surface-content" id="about">
           <section className="intro-card parchment-card">
             <span className="eyebrow"><PixelLeafSprite /> A small corner of the internet</span>
-            <h1>Hi, I’m <span>N.F.</span></h1>
-            <p>I build playful digital experiences with a love for pixel art, games, and creative tech.</p>
+            <h1>Hi — I'm Niko Filipić</h1>
+            <p>I'm a Croatian developer from Zagreb studying at Algebra University College. I build Android and web apps and enjoy UI design, algorithms and turning ideas into shipped products. I'm passionate about robotics — especially FPV drones and other UAVs.</p>
             <div className="hero-skills" aria-label="Selected skills">
-              {HERO_SKILLS.slice(0, 6).map((skill) => <span className="hero-skill" key={skill}>{skill}</span>)}
+              {HERO_SKILLS.slice(0, 8).map((skill) => <span className="hero-skill" key={skill}>{skill}</span>)}
             </div>
+            <a className="hero-more" href="#/skills">View more <ArrowIcon /></a>
             <a className="button button--parchment intro-link" href="#projects" onClick={scrollToProjects}>Explore all projects <ArrowIcon /></a>
             <span className="parchment-vine parchment-vine--top" aria-hidden="true">❧</span>
             <span className="parchment-vine parchment-vine--bottom" aria-hidden="true">❧</span>
           </section>
-          <FeaturedBoard projects={PROJECTS} />
+          <FeaturedBoard projects={projects} loaded={loaded} error={error} />
         </div>
 
         <div className="ground-separator" aria-hidden="true"><span /></div>
       </section>
-      <Underground projects={PROJECTS} />
+      <Underground projects={projects} loaded={loaded} error={error} />
       <footer className="site-footer">
         <Brand />
         <span>Made with care, one pixel at a time.</span>
@@ -865,11 +880,12 @@ function Home() {
 
 export default function App() {
   const { path } = useHashRouter();
-  usePageTitle(path);
+  const catalog = useProjects();
+  usePageTitle(path, catalog.projects);
   const route = parseRoute(path);
   let page = <NotFound />;
-  if (route.page === "home") page = <Home />;
+  if (route.page === "home") page = <Home {...catalog} />;
   if (route.page === "skills") page = <SkillsPage />;
-  if (route.page === "project") page = <ProjectPage slug={route.slug} />;
+  if (route.page === "project") page = <ProjectPage slug={route.slug} {...catalog} />;
   return <ErrorBoundary key={path}>{page}</ErrorBoundary>;
 }

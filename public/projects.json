@@ -1,0 +1,112 @@
+[
+  {
+    "slug": "countdown-live-wallpaper",
+    "title": "Countdown Live Wallpaper",
+    "status": "completed",
+    "year": 2022,
+    "tags": [
+      "Android",
+      "Java",
+      "Play Store"
+    ],
+    "summary": "Android live wallpaper that counts down to events, published on Google Play.",
+    "body": "This started when I couldn't find a wallpaper app I liked to count down to an event, so I built my own and shipped it to Google Play. I kept refining it with customization options and learned a lot about how Android wallpapers interact with the OS, and how to design reliable background updates. Link: https://play.google.com/store/apps/details?id=com.Buddy.countdown",
+    "highlighted": true,
+    "img": "/assets/countdown.png",
+    "url": "https://play.google.com/store/apps/details?id=com.Buddy.countdown",
+    "linkLabel": "Find it on Google Play"
+  },
+  {
+    "slug": "5-inch-fpv-drone",
+    "title": "5-Inch FPV Drone",
+    "status": "completed",
+    "year": 2023,
+    "tags": [
+      "FPV",
+      "UAV",
+      "5-inch",
+      "Betaflight"
+    ],
+    "summary": "Durable 5\" freestyle quad tuned for smooth HD footage.",
+    "body": "Carbon frame build with 2207 motors on 6S, F4 FC, GPS rescue and ELRS link. Tuned PIDs for cinematic lines and reliable failsafe handling.",
+    "highlighted": false,
+    "img": "/assets/5-inch.jpg"
+  },
+  {
+    "slug": "10-inch-fpv-drone",
+    "title": "10-Inch FPV Drone",
+    "status": "completed",
+    "year": 2025,
+    "tags": [
+      "FPV",
+      "UAV",
+      "Long Range",
+      "INAV"
+    ],
+    "summary": "Long-range rig optimized for endurance flights.",
+    "body": "10\" props with low‑kv motors and a high‑capacity Li‑ion pack for efficient cruise. Focused on vibration isolation and link reliability.",
+    "highlighted": false,
+    "img": "/assets/10-inch.jpg"
+  },
+  {
+    "slug": "2-4m-autonomous-powered-glider",
+    "title": "2.4m Autonomous Powered Glider",
+    "status": "ongoing",
+    "year": 2025,
+    "tags": [
+      "UAV",
+      "Autopilot",
+      "Glider",
+      "ArduPilot"
+    ],
+    "summary": "Large-span glider platform with onboard autopilot experiments.",
+    "body": "Work‑in‑progress airframe for waypoint and loiter tests. Integrates GPS, telemetry and power monitoring with a lightweight fuselage.",
+    "highlighted": false,
+    "img": "/assets/glider.jpg"
+  },
+  {
+    "slug": "ghost-soundboard",
+    "title": "Ghost Soundboard",
+    "status": "completed",
+    "year": 2023,
+    "tags": [
+      "Android",
+      "Audio",
+      "DSP"
+    ],
+    "summary": "Mobile soundboard that layers eerie stingers and loops for ambience.",
+    "body": "Simple project to learn more about audio development on Android platforms.",
+    "highlighted": false,
+    "img": "/assets/ghost.jpg"
+  },
+  {
+    "slug": "5-5m-flying-wing",
+    "title": "5.5m Flying Wing",
+    "status": "ongoing",
+    "year": 2025,
+    "tags": [
+      "UAV",
+      "Wing Design",
+      "CAD"
+    ],
+    "summary": "Large flying-wing concept focusing on structure and spars.",
+    "body": "Studying airfoil selection, spar layout and modular sections for transport with future autopilot integration.",
+    "highlighted": false,
+    "img": "/assets/wing.png",
+    "imageFit": "contain"
+  },
+  {
+    "slug": "cad-gps-holder",
+    "title": "CAD - GPS Holder",
+    "status": "completed",
+    "year": 2025,
+    "tags": [
+      "CAD",
+      "3D Print"
+    ],
+    "summary": "3D-printed GPS mount designed for FPV frames.",
+    "body": "3d printable GPS and antenna holder for my 5 inch drone. Robust and elegant design.",
+    "highlighted": false,
+    "img": "/assets/gps.png"
+  }
+]

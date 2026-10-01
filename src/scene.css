@@ -1,0 +1,340 @@
+/* Grounded scenery: positions use the grass line, independent of card height. */
+.surface-scene {
+  height: auto;
+  min-height: 760px;
+  padding-bottom: 125px;
+}
+
+.surface-content {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  width: min(1100px, calc(100% - 12%));
+  gap: clamp(30px, 6vw, 90px);
+  padding-top: 132px;
+}
+
+.intro-card {
+  max-width: 550px;
+}
+
+.intro-card.parchment-card {
+  background: linear-gradient(135deg, rgba(255, 246, 222, .76), rgba(240, 221, 182, .6));
+  backdrop-filter: none;
+}
+
+.intro-card h1 {
+  font-size: clamp(29px, 3vw, 39px);
+  letter-spacing: -.06em;
+}
+
+.intro-card > p {
+  max-width: none;
+  color: #403628;
+  font-size: clamp(15px, 1.35vw, 17px);
+  line-height: 1.6;
+}
+
+.featured-board {
+  max-width: 340px;
+  justify-self: end;
+  background: rgba(35, 51, 41, .42);
+  backdrop-filter: none;
+}
+
+.featured-card {
+  background: rgba(29, 42, 35, .6);
+  backdrop-filter: none;
+}
+
+.featured-image-frame,
+.project-card__image-frame {
+  aspect-ratio: 1 / 1;
+  flex: none;
+}
+
+.pixel-image {
+  image-rendering: auto;
+}
+
+.plane {
+  width: clamp(100px, 9vw, 132px);
+  aspect-ratio: 128 / 72;
+  filter: drop-shadow(1px 3px 0 rgba(44, 46, 49, .18));
+}
+
+.plane-propeller {
+  transform-origin: 116px 44px;
+  animation: prop-blur .12s steps(2, end) infinite;
+}
+
+@keyframes prop-blur {
+  50% { transform: scaleY(.3); opacity: .55; }
+}
+
+.scene-tree {
+  bottom: 26px;
+  width: clamp(120px, 15vw, 225px);
+  transform: none;
+  filter: drop-shadow(3px 3px 0 rgba(28, 63, 37, .2));
+}
+
+.scene-tree svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.scene-tree--one {
+  right: clamp(8px, 2vw, 38px);
+  bottom: 27px;
+}
+
+.scene-tree--two {
+  left: clamp(8px, 1.4vw, 26px);
+  bottom: 28px;
+  width: clamp(140px, 17vw, 250px);
+}
+
+.scene-tree--three {
+  right: 24%;
+  bottom: 98px;
+  width: clamp(80px, 9vw, 138px);
+  opacity: .85;
+}
+
+.scene-house {
+  left: clamp(80px, 11vw, 210px);
+  bottom: 33px;
+  width: clamp(140px, 17vw, 228px);
+  transform: none;
+  opacity: 1;
+}
+
+.house-art svg {
+  width: 100%;
+  height: auto;
+}
+
+.house-smoke {
+  left: 64%;
+  top: 21%;
+}
+
+.garden-life {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.garden-rabbit,
+.garden-bird {
+  position: absolute;
+  width: clamp(28px, 3vw, 42px);
+  height: auto;
+}
+
+.garden-rabbit {
+  left: 40%;
+  bottom: 35px;
+}
+
+.garden-bird {
+  right: 9%;
+  bottom: clamp(135px, 17vw, 248px);
+  width: 28px;
+  animation: bird-peek 7s steps(1, end) infinite;
+}
+
+@keyframes bird-peek {
+  90%, 94% { transform: translateY(-3px); }
+  92%, 100% { transform: none; }
+}
+
+.underground {
+  padding: 120px max(8%, calc((100% - 1140px) / 2)) 225px;
+  background-image:
+    radial-gradient(ellipse at 12% 12%, rgba(194, 123, 65, .22), transparent 40%),
+    radial-gradient(ellipse at 88% 60%, rgba(87, 71, 95, .2), transparent 40%),
+    linear-gradient(180deg, #573722, #432b21 50%, #2a2328);
+}
+
+.hanging-roots { background: none; }
+
+.cave-scenery {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cave-texture,
+.cave-ceiling,
+.cave-floor {
+  position: absolute;
+  display: block;
+  left: 0;
+  width: 100%;
+}
+
+.cave-texture { inset: 0; opacity: .72; }
+.cave-ceiling { top: 6px; height: 110px; }
+.cave-floor { bottom: 0; height: 190px; }
+
+.cave-wall {
+  position: absolute;
+  top: 200px;
+  bottom: 170px;
+  width: clamp(60px, 8vw, 130px);
+  background: linear-gradient(90deg, rgba(30, 26, 30, .6), transparent);
+  clip-path: polygon(0 0, 65% 0, 65% 5%, 85% 5%, 85% 14%, 65% 14%, 65% 27%, 90% 27%, 90% 40%, 60% 40%, 60% 57%, 90% 57%, 90% 65%, 65% 65%, 65% 81%, 95% 81%, 95% 91%, 70% 91%, 70% 100%, 0 100%);
+}
+
+.cave-wall--left { left: 0; }
+.cave-wall--right { right: 0; transform: scaleX(-1); }
+.cave-mushrooms { position: absolute; top: 8%; left: 12%; width: 72%; height: auto; }
+.mushrooms--lower { top: 75%; width: 62%; left: 18%; }
+.cave-snail { position: absolute; top: 47%; left: 14%; width: 48%; height: auto; }
+
+.cave-lights { position: absolute; inset: 0; }
+.cave-lights i {
+  position: absolute;
+  left: var(--glow-x);
+  top: var(--glow-y);
+  width: 3px;
+  height: 3px;
+  background: #d6e6a3;
+  box-shadow: 0 0 8px #bad78a;
+  animation: cave-twinkle 4s steps(4, end) var(--glow-delay) infinite;
+}
+
+@keyframes cave-twinkle {
+  0%, 100% { opacity: .3; }
+  45% { opacity: .9; }
+}
+
+.cave-side { top: 90px; gap: 8px; }
+.cave-side--left { left: 1%; }
+.cave-side--right { right: 1%; }
+.cave-side .cave-rock-sprite { width: clamp(65px, 8vw, 112px); }
+.cave-side .pixel-crystal { width: 25px; }
+.cave-title { margin-bottom: 40px; }
+.cave-lanterns { top: -55px; left: 13%; right: 13%; }
+.cave-lanterns .lantern { width: 36px; height: 58px; }
+.cave-lanterns::before,
+.cave-lanterns::after {
+  position: absolute;
+  top: -75px;
+  width: 3px;
+  height: 82px;
+  content: "";
+  background: repeating-linear-gradient(180deg, #a28761 0 4px, #392921 4px 8px);
+}
+.cave-lanterns::before { left: 17px; }
+.cave-lanterns::after { right: 17px; }
+
+.projects-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px 24px;
+}
+
+.project-card { background: rgba(40, 29, 25, .88); }
+.project-card__body { height: auto; flex: 1; }
+.project-card .card-link { margin-top: 18px; }
+.project-card__heading h3 { font-size: clamp(16px, 1.5vw, 19px); }
+.project-card__body > p { font-size: 13px; }
+.project-card__image-frame { margin: 12px 12px 0; }
+
+.cave-bottom-art { bottom: 8px; height: 175px; }
+.mine-entrance {
+  position: absolute;
+  bottom: 2px;
+  left: 5%;
+  display: block;
+  width: clamp(140px, 18vw, 240px);
+  height: auto;
+}
+.cave-bottom-art .crystal--purple { left: 33%; bottom: 50px; width: 38px; }
+.cave-bottom-art .crystal--blue { left: 62%; bottom: 18px; width: 32px; }
+.cave-bottom-art .treasure-chest { right: 5%; bottom: 22px; width: clamp(80px, 10vw, 115px); }
+
+.catalog-notice {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: #e9cfaa;
+  border: 2px dashed #a47a53;
+  background: rgba(40, 29, 25, .7);
+}
+
+@media (min-width: 1500px) {
+  .surface-content { width: min(1180px, calc(100% - 16%)); }
+}
+
+@media (max-width: 1050px) {
+  .surface-scene { height: auto; }
+  .surface-content { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); width: calc(100% - 10%); gap: 28px; }
+  .underground { padding-left: 7%; padding-right: 7%; }
+  .cave-side { opacity: .8; }
+}
+
+@media (max-width: 760px) {
+  .surface-scene { min-height: 0; padding-bottom: 240px; }
+  .surface-content { grid-template-columns: minmax(0, 1fr); width: min(520px, calc(100% - 40px)); padding-top: 106px; gap: 26px; }
+  .featured-board { justify-self: center; max-width: 420px; }
+  .scene-tree--one { right: 8px; width: 120px; transform: none; }
+  .scene-tree--two { left: 8px; width: 150px; transform: none; }
+  .scene-tree--three { display: none; }
+  .scene-house { left: 55px; bottom: 32px; width: 146px; transform: none; }
+  .garden-rabbit { left: 38%; width: 30px; }
+  .garden-bird { right: 10%; bottom: 153px; width: 25px; }
+  .underground { padding: 115px 6% 205px; }
+  .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; }
+  .cave-wall { width: 50px; opacity: .7; }
+  .cave-lanterns { top: -52px; left: 6%; right: 6%; }
+  .cave-lanterns .lantern { width: 28px; }
+  .cave-lanterns::before { left: 13px; }
+  .cave-lanterns::after { right: 13px; }
+  .project-card__image-frame { margin: 9px 9px 0; }
+  .mine-entrance { left: 3%; width: 140px; }
+  .cave-bottom-art .crystal--purple { left: 43%; bottom: 70px; width: 29px; }
+}
+
+@media (max-width: 480px) {
+  .surface-scene { min-height: 0; }
+  .surface-content { width: calc(100% - 30px); padding-top: 98px; }
+  .intro-card h1 { font-size: 29px; }
+  .featured-image-frame,
+  .project-card__image-frame { aspect-ratio: 1 / 1; }
+  .projects-grid { grid-template-columns: 1fr; width: 100%; max-width: 360px; }
+  .underground { padding-right: 24px; padding-left: 24px; }
+  .cave-title > p { max-width: 30ch; line-height: 1.5; }
+  .title-plaque { padding: 9px 16px; gap: 8px; }
+  .title-plaque h2 { font-size: 26px; }
+  .scene-tree--two { width: 120px; }
+  .scene-house { left: 34px; width: 130px; }
+  .garden-rabbit { left: 39%; bottom: 31px; width: 26px; }
+  .garden-bird { right: 13%; }
+  .project-card__body { padding: 15px; }
+  .mine-entrance { width: 132px; }
+  .cave-bottom-art .crystal--blue { left: 55%; width: 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-bird,
+  .cave-lights i { animation: none; }
+}
+
+.hero-more { display: inline-flex; align-items: center; gap: 7px; margin-top: 15px; color: #4c3325; font-size: 12px; text-underline-offset: 3px; }
+.intro-link { display: flex; width: fit-content; }
+
+.distant-cloud-bank { display: none; }
+
+.project-card .project-meta { margin-bottom: 18px; }
+.project-card .card-link { margin-top: auto; }
+.featured-board:has(.featured-list--many) { max-width: 540px; }
+.featured-list--many .featured-copy h2 { font-size: 16px; }
+.featured-list--many .open-project { font-size: 9px; }
+
+@media (max-width: 360px) { .wood-link { padding: 5px 4px; font-size: 8px; } }
