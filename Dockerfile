@@ -3,7 +3,10 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --no-audit --no-fund
+RUN npm ci --no-audit --no-fund \
+  && ROLLUP_VERSION="$(node -p "require('./node_modules/rollup/package.json').version")" \
+  && ROLLUP_ARCH="$(node -p "process.arch")" \
+  && npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund "@rollup/rollup-linux-${ROLLUP_ARCH}-musl@${ROLLUP_VERSION}"
 
 COPY . .
 RUN npm run build
