@@ -95,12 +95,21 @@ function PixelWallpaper({ pixelSize = 6 }) {
       hill(0.05, Math.floor(height * 0.9), Math.floor(height * 0.095), "#38874c");
       hill(0.52, Math.floor(height * 0.93), Math.floor(height * 0.075), "#50a54e");
 
-      // A bright river runs through the valley in chunky, crisp-edged pixels.
-      for (let y = Math.floor(height * 0.8); y < height; y++) {
-        const center = Math.floor(width * (0.48 + Math.sin(y * 0.11) * 0.028));
-        const span = y > height * 0.92 ? 8 : 3;
-        context.fillStyle = y % 3 === 0 ? "#74ddff" : "#35a8db";
-        context.fillRect(center - span / 2, y, span, 1);
+      // Let the stream wind across the valley and widen as it reaches the foreground.
+      const riverStart = Math.floor(height * 0.63);
+      for (let y = riverStart; y < height * 0.99; y++) {
+        const flow = (y - riverStart) / (height - riverStart);
+        const center = Math.floor(width * (0.52 + Math.sin(flow * Math.PI * 2.1) * 0.075 - flow * 0.045));
+        const span = Math.max(2, Math.round(2 + flow * 8));
+        const bank = span + 4 + Math.round(flow * 3);
+        context.fillStyle = "#287b9e";
+        context.fillRect(center - Math.floor(bank / 2), y, bank, 1);
+        context.fillStyle = y % 4 === 0 ? "#70dcf4" : "#35a9d7";
+        context.fillRect(center - Math.floor(span / 2), y, span, 1);
+        if (y % 5 < 2) {
+          context.fillStyle = "#b3f4f5";
+          context.fillRect(center - Math.floor(span / 2) + 1, y, Math.max(1, Math.floor(span / 3)), 1);
+        }
       }
     };
     draw();
@@ -271,24 +280,28 @@ function PixelBalloons() {
 
 function PixelPlaneSprite() {
   return (
-    <svg viewBox="0 0 64 32" width="72" height="36" shapeRendering="crispEdges">
-      <rect x="5" y="15" width="9" height="4" fill="#493124" />
-      <rect x="13" y="13" width="35" height="8" fill="#a53629" />
-      <rect x="20" y="11" width="18" height="4" fill="#d84b36" />
-      <rect x="17" y="17" width="7" height="2" fill="#ffd76b" />
-      <rect x="24" y="18" width="5" height="2" fill="#80c9ee" />
-      <rect x="45" y="11" width="7" height="5" fill="#be4332" />
-      <rect x="49" y="9" width="8" height="11" fill="#a53629" />
-      <rect x="9" y="5" width="32" height="6" fill="#c64231" />
-      <rect x="10" y="4" width="27" height="2" fill="#f39b58" />
-      <rect x="22" y="22" width="25" height="4" fill="#a53629" />
-      <rect x="26" y="24" width="18" height="2" fill="#e15d3e" />
-      <rect x="55" y="13" width="2" height="4" fill="#503225" />
+    <svg viewBox="0 0 96 48" width="100%" height="100%" shapeRendering="crispEdges" aria-hidden="true">
+      <path d="M8 22h15l7-6h34l9 4h10l8 4-8 4H73l-9 4H30l-7-5H8z" fill="#6e2b24" transform="translate(0 2)" />
+      <path d="M6 19h16l6-4h37l9 4h10l8 4-8 4H74l-9 4H28l-6-5H6z" fill="#a3362a" stroke="#49281f" strokeWidth="2" />
+      <path d="M21 18h50l7 3H28z" fill="#e45a3c" />
+      <path d="M23 5h43l8 4v5H20V9z" fill="#b73a2d" stroke="#49281f" strokeWidth="2" />
+      <path d="M27 7h34l5 2v2H24V9z" fill="#ee7548" />
+      <path d="M30 32h36l7 4v4H26v-4z" fill="#a9362a" stroke="#49281f" strokeWidth="2" />
+      <path d="M34 34h27l5 2H31z" fill="#e45a3c" />
+      <path d="M10 15h12v5H6v-3z" fill="#bd4130" stroke="#49281f" strokeWidth="2" />
+      <path d="M31 14h3v5h-3zm29 0h3v5h-3zM37 29h3v6h-3zm22 0h3v6h-3z" fill="#5a3326" />
+      <path d="M40 18h9v6h-9z" fill="#9be0e8" stroke="#49281f" strokeWidth="2" />
+      <path d="M42 19h4v2h-4z" fill="#e4ffff" />
+      <path d="M51 21h12v2H51z" fill="#ffd66f" />
+      <path d="M31 25h4v3h-4zm9 0h4v3h-4zm9 0h4v3h-4z" fill="#f2c05f" />
+      <rect x="85" y="20" width="5" height="7" fill="#5a3326" />
       <g className="plane-propeller">
-        <rect x="56" y="14" width="7" height="2" fill="#382d2b" />
-        <rect x="59" y="10" width="2" height="10" fill="#382d2b" />
+        <path d="M89 22h7v3h-7zM91 17h3v13h-3z" fill="#382d2b" />
+        <path d="M90 23h2v1h-2z" fill="#d8c39a" />
       </g>
-      <rect x="7" y="20" width="4" height="2" fill="#493124" />
+      <path d="M38 36h4v4h-4zm22 0h4v4h-4z" fill="#30241f" />
+      <rect x="39" y="39" width="3" height="2" fill="#251d1a" />
+      <rect x="61" y="39" width="3" height="2" fill="#251d1a" />
     </svg>
   );
 }
@@ -303,15 +316,15 @@ function PixelPlane() {
       const plane = planeRef.current;
       if (stage && plane) {
         const bounds = stage.getBoundingClientRect();
-        const radiusX = Math.min(bounds.width * 0.32, 440);
-        const radiusY = Math.max(28, bounds.height * 0.11);
+        const radiusX = Math.min(bounds.width * 0.36, 500);
+
         const centerX = bounds.width * 0.56;
-        const centerY = bounds.height * 0.22;
-        const angle = (time / 1000) * 0.6;
-        const x = centerX + radiusX * Math.cos(angle);
-        const y = centerY + radiusY * Math.sin(angle);
-        const heading = Math.atan2(radiusY * Math.cos(angle), -radiusX * Math.sin(angle)) * (180 / Math.PI);
-        plane.style.transform = `translate(${x - 36}px, ${y - 18}px) rotate(${heading}deg)`;
+        const centerY = Math.min(bounds.height * 0.14, 116);
+        const angle = (time / 1000) * 0.34;
+        const x = centerX + radiusX * Math.sin(angle);
+        const y = centerY + Math.sin(angle * 0.5) * 6;
+        const direction = Math.cos(angle) < 0 ? -1 : 1;
+        plane.style.transform = "translate(" + (x - plane.offsetWidth / 2) + "px, " + (y - plane.offsetHeight / 2) + "px) scaleX(" + direction + ")";
       }
       animationFrame = requestAnimationFrame(fly);
     };
@@ -369,9 +382,9 @@ function PixelTreeSprite({ scale = 1 }) {
 function PixelTrees() {
   return (
     <div className="scene-trees" aria-hidden="true">
-      <div className="scene-tree scene-tree--one"><PixelTreeSprite scale={1.15} /></div>
-      <div className="scene-tree scene-tree--two"><PixelTreeSprite scale={1.45} /></div>
-      <div className="scene-tree scene-tree--three"><PixelTreeSprite scale={0.9} /></div>
+      <div className="scene-tree scene-tree--one"><PixelTreeSprite scale={1.8} /></div>
+      <div className="scene-tree scene-tree--two"><PixelTreeSprite scale={1.55} /></div>
+      <div className="scene-tree scene-tree--three"><PixelTreeSprite scale={1.15} /></div>
     </div>
   );
 }
@@ -443,10 +456,92 @@ function ArrowIcon() {
   );
 }
 
+function PixelCatSprite() {
+  return (
+    <svg viewBox="0 0 28 20" shapeRendering="crispEdges" aria-hidden="true">
+      <path d="M3 7h4V2h5v4h5V2h5v5h4v8h-4v3H7v-3H3z" fill="#fff0d5" stroke="#3a281f" strokeWidth="2" />
+      <rect x="8" y="10" width="2" height="2" fill="#35241e" />
+      <rect x="19" y="10" width="2" height="2" fill="#35241e" />
+      <rect x="12" y="14" width="4" height="2" fill="#d88978" />
+    </svg>
+  );
+}
+
+function PixelLeafSprite() {
+  return (
+    <svg className="eyebrow-leaf" viewBox="0 0 20 20" shapeRendering="crispEdges" aria-hidden="true">
+      <path d="M3 7h4V3h9v4h3v6h-4v4H8v-4H4V9H3z" fill="#75a94e" stroke="#385d38" strokeWidth="2" />
+      <path d="M6 14 15 5" stroke="#d4e59a" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function PickaxeSprite() {
+  return (
+    <svg viewBox="0 0 40 40" shapeRendering="crispEdges" aria-hidden="true">
+      <path d="M8 35 5 32 22 13l4 3-1 3L11 36z" fill="#75452d" stroke="#34251e" strokeWidth="2" />
+      <path d="M9 31 22 16l2 2-13 15z" fill="#d39a53" />
+      <path d="m3 12 2-5 7-4h10l6 5h9v6h-9l-5-4h-5l-5 8-5-3-3 4-4-3 4-6z" fill="#9ba9a7" stroke="#30231d" strokeWidth="2" />
+      <path d="m8 9 6-3h7l3 3h-9l-5 6-3-2z" fill="#e3e0cb" />
+      <path d="M29 10h6v2h-6z" fill="#667575" />
+    </svg>
+  );
+}
+
+
+function CrystalSprite({ variant = "violet", className = "" }) {
+  const palette = {
+    violet: { dark: "#56358f", body: "#8f54df", light: "#e0aaff" },
+    blue: { dark: "#1d657d", body: "#32b9d1", light: "#9af3f2" },
+    teal: { dark: "#276c59", body: "#50bd87", light: "#b7f1a1" },
+  }[variant];
+  return (
+    <svg className={"pixel-crystal " + className} viewBox="0 0 32 44" shapeRendering="crispEdges" aria-hidden="true">
+      <path d="M10 2h12l8 12v18L16 42 2 31V14z" fill={palette.dark} stroke="#211a24" strokeWidth="2" />
+      <path d="M11 4h5v29l-9-5V15z" fill={palette.body} />
+      <path d="M17 4h4l7 11v14l-7 5-4-2z" fill={palette.light} />
+      <path d="M11 4h10v4H11z" fill="#fff1d3" opacity=".75" />
+    </svg>
+  );
+}
+
+function CaveRockClusterSprite() {
+  return (
+    <svg className="cave-rock-sprite" viewBox="0 0 144 72" shapeRendering="crispEdges" aria-hidden="true">
+      <path d="m2 61 3-12 9-4 4-8 11-2 7 7 10-3 5-9 13-2 9 7 8-5 12 2 8 9 11-4 11 5 7 7 10-2 3 5v17H2z" fill="#2d211d" />
+      <path d="m5 57 2-9 8-4 4-7 9-1 6 6-2 9-9 7-14-1z" fill="#5f4836" stroke="#2c201b" strokeWidth="3" />
+      <path d="m18 45 8-7 7 4-2 5-8 2z" fill="#927454" />
+      <path d="m29 57 2-15 8-4 5-8 12-2 8 7-1 14-9 10-17 1z" fill="#765a40" stroke="#30221b" strokeWidth="3" />
+      <path d="m39 39 7-7 8-1 4 4-10 3-4 6z" fill="#a1845f" />
+      <path d="m61 60 1-12 8-5 3-8 10-3 9 5 3 13-8 12-17 1z" fill="#584536" stroke="#2c201b" strokeWidth="3" />
+      <path d="m73 41 8-6 7 3-6 4-5 5z" fill="#80664c" />
+      <path d="m90 57 2-16 9-5 4-10 13 1 7 8-1 14-9 12-18 1z" fill="#806344" stroke="#30221b" strokeWidth="3" />
+      <path d="m103 34 7-5 9 2 3 5-11-1-5 5z" fill="#b09268" />
+      <path d="m119 59 2-12 8-5 9 3 4 6v12h-20z" fill="#614a37" stroke="#2c201b" strokeWidth="3" />
+      <path d="m128 47 7 1 3 4h-9z" fill="#927454" />
+      <rect x="51" y="54" width="4" height="3" fill="#392a21" />
+      <rect x="110" y="47" width="4" height="3" fill="#392a21" />
+    </svg>
+  );
+}
+function TreasureChestSprite() {
+  return (
+    <svg className="treasure-chest" viewBox="0 0 68 48" shapeRendering="crispEdges" aria-hidden="true">
+      <path d="M7 17V9h7V4h40v5h7v8h4v27H3V17z" fill="#633d25" stroke="#241a17" strokeWidth="3" />
+      <path d="M10 14V9h7V6h34v3h7v5z" fill="#bd772f" />
+      <path d="M6 19h56v22H6z" fill="#9b5628" stroke="#321f19" strokeWidth="2" />
+      <path d="M10 22h48v4H10zm0 13h48v4H10z" fill="#d99a43" />
+      <path d="M29 18h10v24H29z" fill="#f0c65c" stroke="#51301e" strokeWidth="2" />
+      <rect x="32" y="26" width="4" height="6" fill="#51301e" />
+    </svg>
+  );
+}
+
+
 function Brand() {
   return (
     <a className="brand-plaque" href="#/" aria-label="N.F. Studio home">
-      <span className="brand-critters" aria-hidden="true">🐈</span>
+      <span className="brand-critters" aria-hidden="true"><PixelCatSprite /></span>
       <span className="brand-monogram">N.F.</span>
     </a>
   );
@@ -475,7 +570,7 @@ function SiteHeader() {
           <GithubIcon /><span>GitHub</span>
         </a>
         <a className="wood-link" href="#/skills"><SkillsIcon /><span>Skills</span></a>
-        <a className="wood-link wood-link--quiet" href="#projects" onClick={scrollToProjects}><span>Projects</span><ArrowIcon /></a>
+
       </nav>
     </header>
   );
@@ -574,7 +669,7 @@ function FeaturedBoard({ projects }) {
         </div>
       ) : (
         <div className="feature-empty">
-          <span className="feature-empty__tool" aria-hidden="true">⚒</span>
+          <span className="feature-empty__tool" aria-hidden="true"><PickaxeSprite /></span>
           <p>The next discovery is taking shape.</p>
         </div>
       )}
@@ -631,14 +726,20 @@ function Underground({ projects }) {
         <div className="grass-pixels" />
         <div className="hanging-roots" />
       </div>
-      <div className="cave-side cave-side--left" aria-hidden="true"><span>☠</span><span>◈</span><span>✦</span></div>
-      <div className="cave-side cave-side--right" aria-hidden="true"><span>♧</span><span>◇</span><span>✦</span></div>
+      <div className="cave-side cave-side--left" aria-hidden="true">
+        <CaveRockClusterSprite />
+        <CrystalSprite variant="teal" />
+      </div>
+      <div className="cave-side cave-side--right" aria-hidden="true">
+        <CaveRockClusterSprite />
+        <CrystalSprite variant="blue" />
+      </div>
       <div className="underground-inner">
         <div className="cave-lanterns" aria-hidden="true"><Lantern /><Lantern /></div>
         <div className="cave-title">
           <PixelBadge light>Below the garden</PixelBadge>
           <div className="title-plaque">
-            <span className="pickaxe" aria-hidden="true">⚒</span>
+            <span className="pickaxe" aria-hidden="true"><PickaxeSprite /></span>
             <h2 id="all-projects-title">All Projects</h2>
           </div>
           <p>Little builds, big ideas, and everything in between.</p>
@@ -648,10 +749,9 @@ function Underground({ projects }) {
         </div>
       </div>
       <div className="cave-bottom-art" aria-hidden="true">
-        <span className="crystal crystal--purple">✦</span>
-        <span className="crystal crystal--blue">✧</span>
-        <span className="treasure">♢</span>
-        <span className="fossil">〰</span>
+        <CrystalSprite variant="violet" className="crystal--purple" />
+        <CrystalSprite variant="blue" className="crystal--blue" />
+        <TreasureChestSprite />
       </div>
     </section>
   );
@@ -738,7 +838,7 @@ function Home() {
         <SiteHeader />
         <div className="surface-content" id="about">
           <section className="intro-card parchment-card">
-            <span className="eyebrow"><span className="eyebrow-leaf" aria-hidden="true">✦</span> A small corner of the internet</span>
+            <span className="eyebrow"><PixelLeafSprite /> A small corner of the internet</span>
             <h1>Hi, I’m <span>N.F.</span></h1>
             <p>I build playful digital experiences with a love for pixel art, games, and creative tech.</p>
             <div className="hero-skills" aria-label="Selected skills">
@@ -750,7 +850,7 @@ function Home() {
           </section>
           <FeaturedBoard projects={PROJECTS} />
         </div>
-        <div className="surface-caption" aria-hidden="true">Build something wonderful</div>
+
         <div className="ground-separator" aria-hidden="true"><span /></div>
       </section>
       <Underground projects={PROJECTS} />
