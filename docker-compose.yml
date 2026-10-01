@@ -1,0 +1,8 @@
+services:
+  portfolio:
+    build: .
+    image: nf-pixel-portfolio:local
+    container_name: nf-pixel-portfolio
+    ports:
+      - "${PORTFOLIO_HTTP_PORT:-8080}:80"
+    restart: unless-stopped
