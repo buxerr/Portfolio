@@ -216,19 +216,6 @@
 .cave-side .cave-rock-sprite { width: clamp(65px, 8vw, 112px); }
 .cave-side .pixel-crystal { width: 25px; }
 .cave-title { margin-bottom: 40px; }
-.cave-lanterns { top: -55px; left: 13%; right: 13%; }
-.cave-lanterns .lantern { width: 36px; height: 58px; }
-.cave-lanterns::before,
-.cave-lanterns::after {
-  position: absolute;
-  top: -75px;
-  width: 3px;
-  height: 82px;
-  content: "";
-  background: repeating-linear-gradient(180deg, #a28761 0 4px, #392921 4px 8px);
-}
-.cave-lanterns::before { left: 17px; }
-.cave-lanterns::after { right: 17px; }
 
 .projects-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -289,10 +276,6 @@
   .underground { padding: 115px 6% 205px; }
   .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; }
   .cave-wall { width: 50px; opacity: .7; }
-  .cave-lanterns { top: -52px; left: 6%; right: 6%; }
-  .cave-lanterns .lantern { width: 28px; }
-  .cave-lanterns::before { left: 13px; }
-  .cave-lanterns::after { right: 13px; }
   .project-card__image-frame { margin: 9px 9px 0; }
   .mine-entrance { left: 3%; width: 140px; }
   .cave-bottom-art .crystal--purple { left: 43%; bottom: 70px; width: 29px; }

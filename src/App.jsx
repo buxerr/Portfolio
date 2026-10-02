@@ -502,25 +502,6 @@ function PixelLeafSprite() {
   );
 }
 
-function PickaxeSprite() {
-  return (
-    <svg viewBox="0 0 32 32" shapeRendering="crispEdges" aria-hidden="true">
-      {/* Straight ash handle, with a dark edge and a narrow sunlit face. */}
-      <path d="m3 27 17-17 5 5L8 32z" fill="#30251d" />
-      <path d="m5 27 16-15 2 3L8 30z" fill="#a36835" />
-      <path d="m5 27 16-15 1 1L6 28z" fill="#e7b868" />
-      <path d="m6 29 2-2 2 2-2 2z" fill="#754526" />
-      {/* A continuous steel head with two tapered tips and a clear central eye. */}
-      <path d="M2 11V8h3V5h4V2h9v2h5v3h4v4h3v7h-4v-4h-3v-3h-5V8h-5v1H9v3H6v2H2z" fill="#30383b" />
-      <path d="M4 10V8h3V5h4V4h6v2h5v3h4v3h2v3h-2v-3h-3V9h-5V7h-6v2H8v2H4z" fill="#a9bfc2" />
-      <path d="M7 6h4V4h6v2h5v2h-5V6h-6v2H7z" fill="#e6eee0" />
-      <path d="M4 11h4v-2h4V8h5v1h5v3h3v4h3v2h-2v-4h-3v-3h-5V9h-5v1H9v2H6v2H4z" fill="#647e85" />
-      <path d="M17 7h4v5h-4z" fill="#384b51" />
-      <path d="M18 8h2v3h-2z" fill="#d0d7c3" />
-    </svg>
-  );
-}
-
 function CrystalSprite({ variant = "violet", className = "" }) {
   const palette = {
     violet: { dark: "#56358f", body: "#8f54df", light: "#e0aaff" },
@@ -701,7 +682,6 @@ function FeaturedBoard({ projects, loaded, error }) {
         </div>
       ) : (
         <div className="feature-empty">
-          <span className="feature-empty__tool" aria-hidden="true"><PickaxeSprite /></span>
           <p>{!loaded ? "Discovering projects…" : error ? "Projects are taking a little longer to load. Please try again shortly." : "The next discovery is taking shape."}</p>
         </div>
       )}
@@ -768,12 +748,12 @@ function Underground({ projects, loaded, error }) {
         <CrystalSprite variant="blue" />
       </div>
       <div className="underground-inner">
-        <div className="cave-lanterns" aria-hidden="true"><Lantern /><Lantern /></div>
         <div className="cave-title">
           <PixelBadge light>Below the garden</PixelBadge>
           <div className="title-plaque">
-            <span className="pickaxe" aria-hidden="true"><PickaxeSprite /></span>
             <h2 id="all-projects-title">All Projects</h2>
+            <span className="sign-lantern sign-lantern--left" aria-hidden="true"><Lantern /></span>
+            <span className="sign-lantern sign-lantern--right" aria-hidden="true"><Lantern /></span>
           </div>
           <p>Little builds, big ideas, and everything in between.</p>
         </div>
