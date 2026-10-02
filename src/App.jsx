@@ -195,7 +195,7 @@ function spawnCloudsEnsured() {
     id: `cloud-${Date.now()}-${index}-${Math.random().toString(36).slice(2, 6)}`,
     x: -20 + Math.random() * 120,
     top: 7 + Math.random() * 21,
-    speed: 3 + Math.random() * 5,
+    speed: (3 + Math.random() * 5) * 0.7,
     scale: 0.9 + Math.random() * 1.2,
     alpha: 0.64 + Math.random() * 0.36,
   }));
@@ -504,16 +504,22 @@ function PixelLeafSprite() {
 
 function PickaxeSprite() {
   return (
-    <svg viewBox="0 0 40 40" shapeRendering="crispEdges" aria-hidden="true">
-      <path d="M8 35 5 32 22 13l4 3-1 3L11 36z" fill="#75452d" stroke="#34251e" strokeWidth="2" />
-      <path d="M9 31 22 16l2 2-13 15z" fill="#d39a53" />
-      <path d="m3 12 2-5 7-4h10l6 5h9v6h-9l-5-4h-5l-5 8-5-3-3 4-4-3 4-6z" fill="#9ba9a7" stroke="#30231d" strokeWidth="2" />
-      <path d="m8 9 6-3h7l3 3h-9l-5 6-3-2z" fill="#e3e0cb" />
-      <path d="M29 10h6v2h-6z" fill="#667575" />
+    <svg viewBox="0 0 32 32" shapeRendering="crispEdges" aria-hidden="true">
+      {/* Straight ash handle, with a dark edge and a narrow sunlit face. */}
+      <path d="m3 27 17-17 5 5L8 32z" fill="#30251d" />
+      <path d="m5 27 16-15 2 3L8 30z" fill="#a36835" />
+      <path d="m5 27 16-15 1 1L6 28z" fill="#e7b868" />
+      <path d="m6 29 2-2 2 2-2 2z" fill="#754526" />
+      {/* A continuous steel head with two tapered tips and a clear central eye. */}
+      <path d="M2 11V8h3V5h4V2h9v2h5v3h4v4h3v7h-4v-4h-3v-3h-5V8h-5v1H9v3H6v2H2z" fill="#30383b" />
+      <path d="M4 10V8h3V5h4V4h6v2h5v3h4v3h2v3h-2v-3h-3V9h-5V7h-6v2H8v2H4z" fill="#a9bfc2" />
+      <path d="M7 6h4V4h6v2h5v2h-5V6h-6v2H7z" fill="#e6eee0" />
+      <path d="M4 11h4v-2h4V8h5v1h5v3h3v4h3v2h-2v-4h-3v-3h-5V9h-5v1H9v2H6v2H4z" fill="#647e85" />
+      <path d="M17 7h4v5h-4z" fill="#384b51" />
+      <path d="M18 8h2v3h-2z" fill="#d0d7c3" />
     </svg>
   );
 }
-
 
 function CrystalSprite({ variant = "violet", className = "" }) {
   const palette = {
