@@ -111,11 +111,16 @@ function PixelWallpaper({ pixelSize = 4 }) {
         };
       };
       const bridgeY = height - Math.round(90 / pixelSize);
-      const bridgeSections = Array.from({ length: 7 }, (_, index) => riverSection(bridgeY - 2 + index));
-      // Cover both banks across the entire deck, including a diagonal stream.
-      const bridgeLeft = Math.floor(Math.min(...bridgeSections.map(({ center, span }) => center - span / 2)) - 4);
-      const bridgeRight = Math.ceil(Math.max(...bridgeSections.map(({ center, span }) => center + span / 2)) + 4);
-      const bridgeWidth = bridgeRight - bridgeLeft;
+      // Center the opening on the water emerging below the deck, with equal bank overlap.
+      const bridgeChannel = riverSection(bridgeY + 4);
+      const bridgeBankOverlap = Math.max(4, Math.ceil((18 - bridgeChannel.span) / 2));
+      const bridgeLeft = bridgeChannel.center - Math.floor(bridgeChannel.span / 2) - bridgeBankOverlap;
+      const bridgeWidth = bridgeChannel.span + bridgeBankOverlap * 2;
+      const bridgeRise = Math.max(2, Math.min(4, Math.round(bridgeWidth * .12)));
+      const bridgeDeckY = (offset) => {
+        const position = offset / (bridgeWidth - 1) * 2 - 1;
+        return bridgeY - Math.round(bridgeRise * (1 - position * position));
+      };
 
       const houseLeft = cssWidth <= 480 ? 34 : cssWidth <= 760 ? 55 : Math.min(210, Math.max(80, cssWidth * .11));
       const houseWidth = cssWidth <= 480 ? 130 : cssWidth <= 760 ? 146 : Math.min(228, Math.max(140, cssWidth * .17));
@@ -170,16 +175,31 @@ function PixelWallpaper({ pixelSize = 4 }) {
           context.fillRect(x, y, 2, 1);
         }
       }
-      context.fillStyle = "#573f2b";
-      context.fillRect(bridgeLeft, bridgeY, bridgeWidth, 4);
-      context.fillStyle = "#b17c42";
-      context.fillRect(bridgeLeft, bridgeY - 2, bridgeWidth, 3);
-      for (let i = 0; i < bridgeWidth; i += 5) {
-        context.fillStyle = "#e0b369";
-        context.fillRect(bridgeLeft + i, bridgeY - 5, 1, 5);
+      // A low timber arch: the deck, edge beam and handrail follow the same curve.
+      for (let offset = 0; offset < bridgeWidth; offset++) {
+        const x = bridgeLeft + offset;
+        const deckY = bridgeDeckY(offset);
+        context.fillStyle = "#493323";
+        context.fillRect(x, deckY - 1, 1, 5);
+        context.fillStyle = offset % 4 === 0 ? "#956233" : "#ba874c";
+        context.fillRect(x, deckY, 1, 2);
+        context.fillStyle = "#76502d";
+        context.fillRect(x, deckY + 2, 1, 1);
+        context.fillStyle = "#533822";
+        context.fillRect(x, deckY - 6, 1, 2);
+        context.fillStyle = "#d2a164";
+        context.fillRect(x, deckY - 6, 1, 1);
       }
-      context.fillStyle = "#85552e";
-      context.fillRect(bridgeLeft, bridgeY - 5, bridgeWidth, 1);
+      const bridgePostCount = Math.max(3, Math.round((bridgeWidth - 3) / 5));
+      for (let post = 0; post <= bridgePostCount; post++) {
+        const offset = 1 + Math.round(post * (bridgeWidth - 3) / bridgePostCount);
+        const x = bridgeLeft + offset;
+        const deckY = bridgeDeckY(offset);
+        context.fillStyle = "#674329";
+        context.fillRect(x, deckY - 5, 2, 6);
+        context.fillStyle = "#e0b369";
+        context.fillRect(x, deckY - 5, 1, 5);
+      }
     };
     draw();
     const observer = new ResizeObserver(draw);
