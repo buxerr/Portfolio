@@ -158,8 +158,6 @@
     linear-gradient(180deg, #573722, #432b21 50%, #2a2328);
 }
 
-.hanging-roots { background: none; }
-
 .cave-scenery {
   position: absolute;
   z-index: 0;
@@ -179,6 +177,31 @@
 
 .cave-texture { inset: 0; opacity: .72; }
 .cave-ceiling { top: 6px; height: 110px; }
+
+.cave-roots { position: absolute; inset: 22px 0 auto; }
+.cave-root {
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: auto;
+  opacity: .86;
+}
+.cave-root--left {
+  left: calc(clamp(8px, 1.4vw, 26px) + clamp(70px, 8.5vw, 125px));
+  width: clamp(76px, 7vw, 96px);
+  transform: translateX(-50%);
+}
+.cave-root--fine { left: 29%; width: 48px; opacity: .65; }
+.cave-root--middle {
+  right: calc(24% + clamp(40px, 4.5vw, 69px));
+  width: 66px;
+  transform: translateX(50%);
+}
+.cave-root--right {
+  right: calc(clamp(8px, 2vw, 38px) + clamp(60px, 7.5vw, 112.5px));
+  width: clamp(70px, 6.5vw, 88px);
+  transform: translateX(50%);
+}
 .cave-floor { bottom: 0; height: 190px; }
 
 .cave-wall {
@@ -276,6 +299,9 @@
   .underground { padding: 115px 6% 205px; }
   .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; }
   .cave-wall { width: 50px; opacity: .7; }
+  .cave-root--fine, .cave-root--middle { display: none; }
+  .cave-root--left { left: 83px; width: 66px; }
+  .cave-root--right { right: 68px; width: 60px; }
   .project-card__image-frame { margin: 9px 9px 0; }
   .mine-entrance { left: 3%; width: 140px; }
   .cave-bottom-art .crystal--purple { left: 43%; bottom: 70px; width: 29px; }
@@ -293,6 +319,7 @@
   .title-plaque { padding: 9px 16px; gap: 8px; }
   .title-plaque h2 { font-size: 26px; }
   .scene-tree--two { width: 120px; }
+  .cave-root--left { left: 68px; }
   .scene-house { left: 34px; width: 130px; }
   .garden-rabbit { left: 39%; bottom: 31px; width: 26px; }
   .garden-bird { right: 13%; }

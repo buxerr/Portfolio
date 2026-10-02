@@ -128,6 +128,66 @@ export function MineEntrance() {
   );
 }
 
+// Uneven lengths and individual forks keep the roots from looking tiled.
+function CaveRoots() {
+  const clusters = [
+    {
+      name: "left",
+      paths: [
+        ["M41 0v18h-4v16h4v15h-5v15h-6v14", 4],
+        ["M37 24H28v9H18v12H9v11H4", 2],
+        ["M41 37h11v10h9v13h7v8", 3],
+        ["M36 56H25v10H17v9H11", 2],
+        ["M30 76v9h-5v10m5-17h9v9h7v5", 1],
+      ],
+      highlight: "M40 0v17h-4v15m5 6v10h-5v13",
+    },
+    {
+      name: "fine",
+      paths: [
+        ["M34 0v20h5v14h-6v18h-4v17", 2],
+        ["M39 28h13v10h8v11m-27-8H21v9H13v8", 1],
+        ["M29 63h8v10h6v8m-14-14h-7v11", 1],
+      ],
+      highlight: "M34 0v17m5 8v8",
+    },
+    {
+      name: "middle",
+      paths: [
+        ["M36 0v15h7v16h-4v13h6v17h5v15", 3],
+        ["M43 25H30v8H21v12H12v8", 2],
+        ["M39 40h16v11h10v12h7v7", 2],
+        ["M45 57H34v13h-7v9m23-5v15h5v6", 1],
+      ],
+      highlight: "M36 0v14h7v12m-4 14v4h6v12",
+    },
+    {
+      name: "right",
+      paths: [
+        ["M38 0v22h-5v18", 4],
+        ["M33 38H25v14h-6v15h-7v10", 3],
+        ["M33 38h12v13h7v17h6v11", 3],
+        ["M25 51H13v10H6v7m46-3h11v9h8", 1],
+        ["M19 67h9v11h5v10m25-12v11h-5v10", 1],
+      ],
+      highlight: "M38 0v20h-5v16m12 7v7h7v14",
+    },
+  ];
+  return (
+    <div className="cave-roots" aria-hidden="true">
+      {clusters.map(({ name, paths, highlight }) => (
+        <svg key={name} className={`cave-root cave-root--${name}`} viewBox="0 0 80 100" shapeRendering="crispEdges">
+          <g fill="none" strokeLinejoin="miter" strokeLinecap="square">
+            {paths.map(([d, width], index) => <path key={`edge-${index}`} d={d} stroke="#30231b" strokeWidth={width + 2} />)}
+            {paths.map(([d, width], index) => <path key={index} d={d} stroke="#875c37" strokeWidth={width} />)}
+            <path d={highlight} stroke="#b0804e" strokeWidth="1" />
+          </g>
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 export function CaveScenery() {
   const grit = Array.from({ length: 65 }, (_, i) => (
     <rect key={i} x={(i * 67) % 192} y={(i * 43 + 17) % 192} width={i % 3 + 2} height={i % 2 + 2} fill={i % 2 ? "#a2744b" : "#241c1e"} opacity=".26" />
@@ -151,15 +211,8 @@ export function CaveScenery() {
       </svg>
       <svg className="cave-ceiling" viewBox="0 0 1200 120" preserveAspectRatio="none" shapeRendering="crispEdges">
         <path d="M0 0h1200v19h-51v8h-63v-5h-81v9h-79v-8h-107v5h-77v-8h-101v11h-86v-6h-92v7h-75v-8h-92v7h-109v-9H69v7H0z" fill="#32241e" />
-        {Array.from({ length: 13 }, (_, i) => {
-          const x = 30 + i * 96;
-          const end = 65 + (i * 17) % 40;
-          return <g key={i} fill="none" strokeWidth="2">
-            <path d={`M${x} 12v26l-9 14v${end - 42}m9-26 13 11v20m-14-25-19 10-5 15m28-4 9 11m-17-3-9 10`} stroke="#281e1b" strokeWidth="5" />
-            <path d={`M${x} 12v26l-9 14v${end - 42}m9-26 13 11v20m-14-25-19 10-5 15m28-4 9 11m-17-3-9 10`} stroke="#9b6437" />
-          </g>;
-        })}
       </svg>
+      <CaveRoots />
       <div className="cave-wall cave-wall--left" />
       <div className="cave-wall cave-wall--right" />
       <div className="cave-lights">
@@ -168,8 +221,6 @@ export function CaveScenery() {
       <svg className="cave-floor" viewBox="0 0 1200 170" preserveAspectRatio="none" shapeRendering="crispEdges">
         <path d="M0 69h40V55h33v12h27v13h51V56h45v-9h49v18h29v30h56V77h43v24h40v22h80v-14h41v-9h51v17h58V93h36V79h60V67h33V45h43v21h38v11h54V58h49V45h42v-8h44v32h41v-7h48V51h41v20h23v99H0z" fill="#29242c" stroke="#1c1d23" strokeWidth="6" />
         <path d="M0 124h75v-14h43v24h54v-12h51v14h75v18h67v-18h79v18h116v-12h100v-16h95v19h93v-15h85v-15h69v14h60v-9h58v50H0z" fill="#37333a" />
-        <path d="M430 122h340v8H430zm36 10h275v7H466zm38 11h210v6H504z" fill="#2b98b5" />
-        <path d="M480 129h75v3h-75zm114 7h58v3h-58zm-54 8h90v3h-90z" fill="#8be3e1" />
         <path d="M0 109h53v5H0zm117-10h31v6h-31zm704 8h29v6h-29zm158-22h29v6h-29z" fill="#69636a" />
       </svg>
     </div>

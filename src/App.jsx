@@ -760,7 +760,6 @@ function Underground({ projects, loaded, error }) {
       <CaveScenery />
       <div className="soil-lip" aria-hidden="true">
         <div className="grass-pixels" />
-        <div className="hanging-roots" />
       </div>
       <div className="cave-side cave-side--left" aria-hidden="true">
         <CaveRockClusterSprite />
