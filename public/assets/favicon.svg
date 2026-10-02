@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <title>N.F. Portfolio</title>
+  <path d="M3 6h26v2h2v21h-2v2H3v-2H1V8h2z" fill="#2e211b"/>
+  <path d="M3 8h26v20H3z" fill="#ba8750"/>
+  <path d="M5 10h22v16H5z" fill="#69412b"/>
+  <path d="M5 10h22v2H5zm0 8h22v2H5z" fill="#794a2e"/>
+  <path d="M5 24h22v2H5z" fill="#442b21"/>
+  <path d="M8 13h2v10H8zm5 0h2v10h-2zm-3 2h2v2h-2zm1 2h2v2h-2zm1 2h2v2h-2zM18 13h2v10h-2zm2 0h5v2h-5zm0 4h4v2h-4z" fill="#fff0d5"/>
+  <path d="M4 9h1v1H4zm23 0h1v1h-1zM4 26h1v1H4zm23 0h1v1h-1z" fill="#ffe0a1"/>
+  <path d="M22 5h2v5h-2zM14 1h6v2h2v4h-4V5h-2V3h-2zM25 0h6v4h-2v3h-5V3h1z" fill="#285537"/>
+  <path d="M16 2h4v2h2v2h-3V4h-3zM26 1h4v2h-2v3h-3V4h1z" fill="#84b955"/>
+  <path d="M26 1h4v1h-4zm-10 1h3v1h-3z" fill="#c1d879"/>
+</svg>

@@ -54,8 +54,8 @@ function usePageTitle(path, projects) {
   useEffect(() => {
     const route = parseRoute(path);
     const project = route.page === "project" ? projects.find((item) => item.slug === route.slug) : null;
-    const title = route.page === "skills" ? "Skills" : project?.title || "Playful software";
-    document.title = `${title} · N.F. Studio`;
+    const title = route.page === "skills" ? "Skills" : route.page === "notfound" ? "Page not found" : project?.title;
+    document.title = title ? `${title} · N.F. Portfolio` : "N.F. — Developer Portfolio";
   }, [path, projects]);
 }
 
