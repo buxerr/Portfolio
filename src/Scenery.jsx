@@ -104,38 +104,6 @@ export function GardenLife() {
   );
 }
 
-function Mushrooms({ className = "" }) {
-  return (
-    <svg className={`cave-mushrooms ${className}`} viewBox="0 0 72 52" shapeRendering="crispEdges">
-      <path d="M5 45h60v5H5z" fill="#2c2728" />
-      <path d="M19 26h8v18h-8zm29 7h6v13h-6z" fill="#cdb99c" stroke="#554138" strokeWidth="2" />
-      <path d="M24 27h3v15h-3zm28 6h2v10h-2z" fill="#8e7766" />
-      <path d="M4 24v-9h6V9h7V5h13v4h7v6h6v9z" fill="#914b53" stroke="#392b30" strokeWidth="2" />
-      <path d="M7 23v-7h6V11h7V8h9v4h7v6h4v5z" fill="#d37d70" />
-      <path d="M5 25h37v4H5z" fill="#eac4a0" />
-      <path d="M12 16h5v4h-5zm10-6h5v5h-5zm9 8h5v4h-5z" fill="#fff0c6" />
-      <path d="M37 32v-6h5v-5h6v-3h8v3h7v5h5v6z" fill="#6b717a" stroke="#302b31" strokeWidth="2" />
-      <path d="M40 30v-3h5v-4h7v-3h4v4h6v6z" fill="#7cadb0" />
-      <path d="M45 26h4v3h-4zm9-3h4v3h-4z" fill="#d5f3cc" />
-      <path d="M38 33h29v3H38z" fill="#adc5b5" />
-      <path d="M10 42h4v5h-4zm47 1h5v4h-5z" fill="#518060" />
-    </svg>
-  );
-}
-
-function Snail() {
-  return (
-    <svg className="cave-snail" viewBox="0 0 48 28" shapeRendering="crispEdges">
-      <path d="M7 23h33v3H7z" fill="#262322" />
-      <path d="M10 20h24v-5h5v-5h3v12h-5v3H10z" fill="#b6be8f" stroke="#4a513b" strokeWidth="1" />
-      <path d="M15 5h13l5 5v12H9V11z" fill="#a76c41" stroke="#493427" strokeWidth="2" />
-      <path d="M16 8h10l4 4v8H13V12h10v5h-5" fill="none" stroke="#e6b767" strokeWidth="2" />
-      <rect x="39" y="9" width="2" height="2" fill="#302d28" />
-      <path d="M35 11V6h2v5" fill="#b6be8f" />
-    </svg>
-  );
-}
-
 export function MineEntrance() {
   return (
     <svg className="mine-entrance" viewBox="0 0 136 102" shapeRendering="crispEdges" aria-hidden="true">
@@ -192,8 +160,8 @@ export function CaveScenery() {
           </g>;
         })}
       </svg>
-      <div className="cave-wall cave-wall--left"><Mushrooms /><Snail /><Mushrooms className="mushrooms--lower" /></div>
-      <div className="cave-wall cave-wall--right"><Mushrooms /><Snail /><Mushrooms className="mushrooms--lower" /></div>
+      <div className="cave-wall cave-wall--left" />
+      <div className="cave-wall cave-wall--right" />
       <div className="cave-lights">
         {Array.from({ length: 14 }, (_, i) => <i key={i} style={{ "--glow-x": `${i % 2 ? 96 - (i % 4) : 3 + (i % 4)}%`, "--glow-y": `${18 + i * 5.1}%`, "--glow-delay": `${i * -.37}s` }} />)}
       </div>

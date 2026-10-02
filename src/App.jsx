@@ -99,18 +99,38 @@ function PixelWallpaper({ pixelSize = 4 }) {
       hill(.05, height - landscape * .48, landscape * .33, "#38874c");
       hill(.52, height - landscape * .25, landscape * .32, "#50a54e");
 
-      // A path leads from the cottage to the bridge; the stream stays in the valley.
-      for (let y = height - landscape * .43; y < height - 7; y++) {
-        const flow = (y - height + landscape * .43) / (landscape * .43);
-        const center = width * (.16 + flow * .33);
-        context.fillStyle = y % 3 ? "#c8b273" : "#e0ce92";
-        context.fillRect(Math.floor(center), Math.floor(y), 5 + flow * 5, 1);
+      // Both the stream and its bridge use the same cross-section geometry.
+      // Start below the mountain layer, where the green valley is already visible.
+      const riverStart = Math.floor(height - landscape * .58);
+      const riverEnd = height - 5;
+      const riverSection = (y) => {
+        const flow = Math.max(0, Math.min(1, (y - riverStart) / (riverEnd - riverStart)));
+        return {
+          center: Math.floor(width * (.55 + Math.sin(flow * Math.PI * 1.8) * .035 - flow * .035)),
+          span: Math.max(3, Math.round((12 + flow * flow * Math.min(110, cssWidth * .17)) / pixelSize)),
+        };
+      };
+      const bridgeY = height - Math.round(90 / pixelSize);
+      const bridgeSections = Array.from({ length: 7 }, (_, index) => riverSection(bridgeY - 2 + index));
+      // Cover both banks across the entire deck, including a diagonal stream.
+      const bridgeLeft = Math.floor(Math.min(...bridgeSections.map(({ center, span }) => center - span / 2)) - 4);
+      const bridgeRight = Math.ceil(Math.max(...bridgeSections.map(({ center, span }) => center + span / 2)) + 4);
+      const bridgeWidth = bridgeRight - bridgeLeft;
+
+      const houseLeft = cssWidth <= 480 ? 34 : cssWidth <= 760 ? 55 : Math.min(210, Math.max(80, cssWidth * .11));
+      const houseWidth = cssWidth <= 480 ? 130 : cssWidth <= 760 ? 146 : Math.min(228, Math.max(140, cssWidth * .17));
+      const pathX = (houseLeft + houseWidth * 40 / 96) / pixelSize;
+      const pathY = height - (33 + houseWidth * 6 / 96) / pixelSize;
+      const pathSteps = Math.max(1, Math.ceil(bridgeLeft - pathX));
+      for (let step = 0; step <= pathSteps; step++) {
+        const flow = step / pathSteps;
+        const x = Math.round(pathX + (bridgeLeft - pathX) * flow);
+        const y = Math.round(pathY + (bridgeY - pathY) * flow + Math.sin(flow * Math.PI) * 3);
+        context.fillStyle = step % 3 ? "#c8b273" : "#e0ce92";
+        context.fillRect(x, y, 2, 2);
       }
-      const riverStart = Math.floor(height - landscape * 1.04);
-      for (let y = riverStart; y < height - 5; y++) {
-        const flow = (y - riverStart) / (height - 5 - riverStart);
-        const center = Math.floor(width * (.55 + Math.sin(flow * Math.PI * 1.8) * .035 - flow * .035));
-        const span = Math.max(3, Math.round((12 + flow * flow * Math.min(110, cssWidth * .17)) / pixelSize));
+      for (let y = riverStart; y < riverEnd; y++) {
+        const { center, span } = riverSection(y);
         context.fillStyle = "#49685f";
         context.fillRect(center - Math.floor(span / 2) - 2, y, span + 4, 1);
         context.fillStyle = y % 4 === 0 ? "#6ad2e9" : "#309dc9";
@@ -150,19 +170,16 @@ function PixelWallpaper({ pixelSize = 4 }) {
           context.fillRect(x, y, 2, 1);
         }
       }
-      const bridgeX = Math.floor(width * .516);
-      const bridgeY = height - Math.floor(90 / pixelSize);
-      const bridgeWidth = Math.floor(100 / pixelSize);
       context.fillStyle = "#573f2b";
-      context.fillRect(bridgeX - bridgeWidth / 2, bridgeY, bridgeWidth, 4);
+      context.fillRect(bridgeLeft, bridgeY, bridgeWidth, 4);
       context.fillStyle = "#b17c42";
-      context.fillRect(bridgeX - bridgeWidth / 2, bridgeY - 2, bridgeWidth, 3);
+      context.fillRect(bridgeLeft, bridgeY - 2, bridgeWidth, 3);
       for (let i = 0; i < bridgeWidth; i += 5) {
         context.fillStyle = "#e0b369";
-        context.fillRect(bridgeX - bridgeWidth / 2 + i, bridgeY - 5, 1, 5);
+        context.fillRect(bridgeLeft + i, bridgeY - 5, 1, 5);
       }
       context.fillStyle = "#85552e";
-      context.fillRect(bridgeX - bridgeWidth / 2, bridgeY - 5, bridgeWidth, 1);
+      context.fillRect(bridgeLeft, bridgeY - 5, bridgeWidth, 1);
     };
     draw();
     const observer = new ResizeObserver(draw);
@@ -686,7 +703,6 @@ function FeaturedBoard({ projects, loaded, error }) {
         {Array.from({ length: 4 }, (_, index) => (
           <span className={index < featured.length ? "feature-slot feature-slot--filled" : "feature-slot"} key={index} />
         ))}
-        <span className="feature-slots-label">Up to four featured finds</span>
       </div>
     </section>
   );
