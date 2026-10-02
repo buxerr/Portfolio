@@ -111,12 +111,15 @@ function PixelWallpaper({ pixelSize = 4 }) {
         };
       };
       const bridgeY = height - Math.round(90 / pixelSize);
-      // Center the opening on the water emerging below the deck, with equal bank overlap.
       const bridgeChannel = riverSection(bridgeY + 4);
       const bridgeBankOverlap = Math.max(4, Math.ceil((18 - bridgeChannel.span) / 2));
-      const bridgeLeft = bridgeChannel.center - Math.floor(bridgeChannel.span / 2) - bridgeBankOverlap;
-      const bridgeWidth = bridgeChannel.span + bridgeBankOverlap * 2;
-      const bridgeRise = Math.max(2, Math.min(4, Math.round(bridgeWidth * .12)));
+      const bridgeBaseWidth = bridgeChannel.span + bridgeBankOverlap * 2;
+      // Extend both ends by 15% overall; shift 20 screen pixels right on desktop, scaling down on phones.
+      const bridgeWidth = Math.round(bridgeBaseWidth * 1.15);
+      const bridgeShift = Math.round(Math.min(20, cssWidth / 64) * width / cssWidth);
+      const bridgeLeft = Math.round(bridgeChannel.center - Math.floor(bridgeChannel.span / 2) - bridgeBankOverlap
+        - (bridgeWidth - bridgeBaseWidth) / 2 + bridgeShift);
+      const bridgeRise = Math.max(2, Math.min(4, Math.round(bridgeBaseWidth * .12)));
       const bridgeDeckY = (offset) => {
         const position = offset / (bridgeWidth - 1) * 2 - 1;
         return bridgeY - Math.round(bridgeRise * (1 - position * position));
